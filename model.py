@@ -1,0 +1,1 @@
+"""Model for project 2"""
