@@ -19,6 +19,9 @@ class User(db.Model):
     user_location = db.Column(db.String(15), nullable=False)
     user_books = db.Column(db.String)
 
+    messages_received = db.relationship("DirectMessages", back_populates="sent_message")
+    messages_sent = db.relationship("DirectMessages", back_populates="got_message")
+
 class Book(db.Model):
     """Book"""
 
@@ -28,3 +31,25 @@ class Book(db.Model):
     book_title = db.Column(db.String, nullable=False, unique=True)
     book_genre = db.Column(db.String, nullable=False)
     book_author = db.Column(db.String, nullable=False)
+    book_comments = db.Column(db.String) #foreign key from comments/messages
+
+class Genre(db.Model):
+    """Book Genres"""
+
+    __tablename__ = "genres"
+
+    genre_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    genre_name = db.Column(db.String, unique=True, nullable=False)
+
+class DirectMessages(db.Model):
+    """Log of all messages"""
+
+    __tablename__ = "messages"
+
+    message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    message_contents = db.Column(db.String)
+
+    sent_message = db.relationship("User", back_populates="message_sent")
+    
